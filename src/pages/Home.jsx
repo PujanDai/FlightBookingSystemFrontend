@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ROUTES, USER_ROLE } from '../utils/constants';
-import Button from '../components/common/Button';
+import FlightSearchHero from '../components/flights/FlightSearchHero';
 
 const FEATURES = [
-  { title: 'Seminars', desc: 'Talks and industry insights in one place.', icon: '🎤' },
-  { title: 'Workshops', desc: 'Hands-on sessions and skill-building.', icon: '🛠️' },
-  { title: 'Festivals', desc: 'Cultural and annual college events.', icon: '🎉' },
-  { title: 'Club activities', desc: 'Clubs, societies, and competitions.', icon: '🎭' },
+  { title: 'Global routes', desc: 'Connect to major destinations worldwide with ease.', icon: '🌍' },
+  { title: 'Best fares', desc: 'Find affordable tickets with transparent pricing.', icon: '💸' },
+  { title: '24/7 support', desc: 'Get help anytime during your journey.', icon: '🕒' },
+  { title: 'Secure booking', desc: 'Safe payments and instant confirmations.', icon: '🔒' },
 ];
 
 export default function Home() {
@@ -32,40 +32,14 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-8rem)]">
-      <section className="relative overflow-hidden bg-gradient-hero text-white py-20 sm:py-28 px-4">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.08\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-90" />
-        <div className="container-app relative z-10 text-center">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight max-w-4xl mx-auto">
-            One place for all college events
-          </h1>
-          <p className="mt-6 text-lg sm:text-xl text-primary-100 max-w-2xl mx-auto">
-            Seminars, workshops, festivals, and club activities. Stay informed, register easily, and never miss an event.
-          </p>
-          <div className="mt-10 flex flex-wrap gap-4 justify-center">
-            <Link to={ROUTES.EVENTS}>
-              <Button
-                size="lg"
-                className="min-w-[180px] bg-primary-600 hover:bg-primary-700 text-white font-bold shadow-lg hover:shadow-xl border-2 border-primary-500"
-              >
-                Browse events
-              </Button>
-            </Link>
-            <Link to={ROUTES.REGISTER}>
-              <Button
-                size="lg"
-                className="min-w-[180px] bg-accent-500 hover:bg-accent-600 text-white font-bold shadow-lg hover:shadow-xl border-2 border-accent-400"
-              >
-                Get started
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+    <div className="min-h-[calc(100vh-8rem)] bg-slate-50">
+      {/* Hero + search card */}
+      <FlightSearchHero showAuthCtas={!isAuthenticated} />
 
-      <section className="container-app py-16 sm:py-20">
-        <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 text-center mb-12">
-          What you can do
+      {/* Why Us / core benefits */}
+      <section className="container-app py-10 sm:py-14">
+        <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 text-center mb-8">
+          Why book with Flixor
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {FEATURES.map(({ title, desc, icon }) => (
@@ -78,6 +52,137 @@ export default function Home() {
               <p className="text-sm text-slate-600 mt-2">{desc}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Popular destinations */}
+      <section className="container-app pb-10 sm:pb-14">
+        <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 text-center mb-2">
+          Popular destinations
+        </h2>
+        <p className="text-center text-slate-600 mb-8">
+          We&apos;ve selected some of the best locations around the world for you.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              city: 'Abu Dhabi',
+              tagline: 'Experience the desert skyline',
+            },
+            {
+              city: 'Bangkok',
+              tagline: 'Explore vibrant street life',
+            },
+            {
+              city: 'Kuala Lumpur',
+              tagline: 'View the modern skyline',
+            },
+            {
+              city: 'Bali',
+              tagline: 'Enjoy a tropical holiday',
+            },
+          ].map(({ city, tagline, image }) => (
+            <div
+              key={city}
+              className="rounded-2xl overflow-hidden border border-slate-100 bg-white shadow-soft hover:shadow-soft-lg transition-all"
+            >
+              {image ? (
+                <div className="h-36 sm:h-40 w-full overflow-hidden">
+                  <img
+                    src={image}
+                    alt={city}
+                    className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+              ) : (
+                <div className="h-36 sm:h-40 w-full bg-gradient-to-br from-primary-500/80 via-sky-400/80 to-amber-300/80" />
+              )}
+              <div className="p-5">
+                <p className="text-xs font-medium uppercase tracking-wide text-primary-600 mb-1">
+                  Flights to {city}
+                </p>
+                <h3 className="text-lg font-semibold text-slate-900">{city}</h3>
+                <p className="text-sm text-slate-600 mt-1">{tagline}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Explore Nepal */}
+      <section className="container-app pb-10 sm:pb-14">
+        <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 text-center mb-2">
+          Explore Nepal
+        </h2>
+        <p className="text-center text-slate-600 mb-8">
+          Discover the best places in Nepal for your next getaway.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { city: 'Kathmandu', props: '+1000 stays', price: 'From NPR 800–55,000' },
+            { city: 'Chitwan', props: '+200 stays', price: 'From NPR 1,500–10,000' },
+            { city: 'Pokhara', props: '+200 stays', price: 'From NPR 1,500–10,000' },
+            { city: 'Lumbini', props: '+200 stays', price: 'From NPR 1,200–10,000' },
+          ].map(({ city, props, price }) => (
+            <div
+              key={city}
+              className="rounded-2xl border border-slate-100 bg-white shadow-soft hover:shadow-soft-lg transition-all p-5 flex flex-col justify-between"
+            >
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900">{city}</h3>
+                <p className="text-sm text-slate-600 mt-1">{props}</p>
+                <p className="text-xs text-slate-500 mt-1">{price}</p>
+              </div>
+              <button
+                type="button"
+                className="mt-4 inline-flex items-center justify-center rounded-full border border-primary-200 px-3 py-1.5 text-xs font-medium text-primary-700 hover:bg-primary-50 transition"
+              >
+                Know more
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Download app promo (static for now) */}
+      <section className="bg-slate-900 py-10 sm:py-14">
+        <div className="container-app flex flex-col lg:flex-row items-center justify-between gap-8">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
+              Download the Flixor app
+            </h2>
+            <p className="text-primary-100 text-sm sm:text-base max-w-xl">
+              Discover flight deals exclusively in the app. Get real-time fare alerts, manage your
+              trips on the go, and check in faster.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              className="inline-flex items-center gap-2 rounded-xl bg-black text-white px-4 py-2 text-xs sm:text-sm font-medium shadow-soft hover:shadow-soft-lg"
+            >
+              <span className="text-lg">⬇</span>
+              <span>
+                <span className="block text-[10px] uppercase tracking-wide opacity-80">
+                  Get it on
+                </span>
+                <span className="block text-sm font-semibold">Google Play</span>
+              </span>
+            </button>
+            <button
+              type="button"
+              className="inline-flex items-center gap-2 rounded-xl bg-white text-slate-900 px-4 py-2 text-xs sm:text-sm font-medium shadow-soft hover:shadow-soft-lg"
+            >
+              <span className="text-lg">⬇</span>
+              <span>
+                <span className="block text-[10px] uppercase tracking-wide text-slate-500">
+                  Download on the
+                </span>
+                <span className="block text-sm font-semibold">App Store</span>
+              </span>
+            </button>
+          </div>
         </div>
       </section>
     </div>

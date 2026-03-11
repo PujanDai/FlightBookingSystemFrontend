@@ -1,3 +1,3 @@
 export { authApi } from './auth';
-export { eventsApi } from './events';
-export { categoriesApi } from './categories';
+export { flightsApi } from './flights';
+export { bookingsApi } from './bookings';

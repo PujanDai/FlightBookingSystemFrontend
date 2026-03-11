@@ -2,11 +2,14 @@
  * Aligned with backend models and enums (bakend/src/models/enum.js)
  */
 
-export const APP_NAME = 'EduEvents';
+export const APP_NAME = 'Flixor';
 
 export const ROUTES = {
   HOME: '/',
   EVENTS: '/events',
+  FLIGHTS: '/flights',
+  BOOKING: '/booking/:flightId',
+  MY_BOOKINGS: '/my-bookings',
   EVENT_DETAIL: '/events/:id',
   LOGIN: '/login',
   REGISTER: '/register',

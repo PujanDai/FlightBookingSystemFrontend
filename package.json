@@ -1,5 +1,5 @@
 {
-  "name": "event-management-frontend",
+  "name": "flight-booking-frontend",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -9,10 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-icons/all-files": "^4.1.0",
+    "axios": "^1.6.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.0",
-    "axios": "^1.6.7"
+    "react-router-dom": "^6.22.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",

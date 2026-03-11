@@ -73,6 +73,20 @@ export default function UserMenu() {
             Dashboard
           </Link>
           <Link
+            to={ROUTES.FLIGHTS}
+            onClick={() => setOpen(false)}
+            className="block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-primary-50"
+          >
+            Search Flights
+          </Link>
+          <Link
+            to={ROUTES.MY_BOOKINGS}
+            onClick={() => setOpen(false)}
+            className="block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-primary-50"
+          >
+            My Bookings
+          </Link>
+          <Link
             to={ROUTES.STUDENT_PROFILE}
             onClick={() => setOpen(false)}
             className="block px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-primary-50"

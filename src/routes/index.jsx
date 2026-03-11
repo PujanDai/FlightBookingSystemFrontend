@@ -4,8 +4,9 @@ import ProtectedRoute from './ProtectedRoute';
 import { ROUTES } from '../utils/constants';
 
 import Home from '../pages/Home';
-import Events from '../pages/Events';
-import EventDetail from '../pages/EventDetail';
+import Flights from '../pages/Flights';
+import Booking from '../pages/Booking';
+import MyBookings from '../pages/MyBookings';
 import NotFound from '../pages/NotFound';
 
 import Login from '../pages/auth/Login';
@@ -14,11 +15,11 @@ import VerifyEmail from '../pages/auth/VerifyEmail';
 
 import StudentDashboard from '../pages/student/Dashboard';
 import StudentProfile from '../pages/student/Profile';
-import MyBookings from '../pages/student/MyBookings';
 import Notifications from '../pages/student/Notifications';
 
 import AdminDashboard from '../pages/admin/AdminDashboard';
-import AdminEvents from '../pages/admin/AdminEvents';
+import AdminFlights from '../pages/admin/AdminFlights';
+import AdminBookings from '../pages/admin/AdminBookings';
 import AdminUsers from '../pages/admin/AdminUsers';
 
 const router = createBrowserRouter([
@@ -27,8 +28,14 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <Home /> },
-      { path: 'events', element: <Events /> },
-      { path: 'events/:id', element: <EventDetail /> },
+      { path: 'flights', element: <Flights /> },
+      {
+        path: 'booking/:flightId', element: (
+          <ProtectedRoute>
+            <Booking />
+          </ProtectedRoute>
+        )
+      },
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
       { path: 'verify-email', element: <VerifyEmail /> },
@@ -58,6 +65,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: 'my-bookings',
+        element: (
+          <ProtectedRoute>
+            <MyBookings />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: 'student/notifications',
         element: (
           <ProtectedRoute>
@@ -75,10 +90,18 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'admin/events',
+        path: 'admin/flights',
         element: (
           <ProtectedRoute adminOnly>
-            <AdminEvents />
+            <AdminFlights />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'admin/bookings',
+        element: (
+          <ProtectedRoute adminOnly>
+            <AdminBookings />
           </ProtectedRoute>
         ),
       },

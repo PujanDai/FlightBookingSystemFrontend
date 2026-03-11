@@ -4,19 +4,27 @@ import { useAuth } from '../../context/AuthContext';
 import { APP_NAME, ROUTES } from '../../utils/constants';
 import Button from '../common/Button';
 import UserMenu from './UserMenu';
+import FlixorLogo from "../../assets/FlixorLogo.png"
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { isAuthenticated, user, isAdmin } = useAuth();
 
-  // Only show Home/Events nav when NOT logged in
-  const navLinks = isAuthenticated ? [] : [
+  // Links shown to non-authenticated users
+  const guestLinks = [
     { to: ROUTES.HOME, label: 'Home' },
-    { to: ROUTES.EVENTS, label: 'Events' },
+    { to: ROUTES.FLIGHTS, label: 'Flights' },
   ];
 
+  // Links shown to authenticated users (Home is redundant as it redirects to dashboard)
+  const authLinks = [
+    { to: ROUTES.FLIGHTS, label: 'Flights' },
+  ];
+
+  const navLinks = isAuthenticated ? authLinks : guestLinks;
+
   // Logo links to dashboard when logged in, home when not
-  const logoLink = isAuthenticated 
+  const logoLink = isAuthenticated
     ? (isAdmin ? ROUTES.ADMIN_DASHBOARD : ROUTES.STUDENT_DASHBOARD)
     : ROUTES.HOME;
 
@@ -24,12 +32,15 @@ export default function Header() {
     <header className="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-50 shadow-soft">
       <div className="container-app">
         <div className="flex items-center justify-between h-16 sm:h-[4.25rem]">
-          <Link
+          {/* <Link
             to={logoLink}
             className="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-700 bg-clip-text text-transparent"
           >
             {APP_NAME}
-          </Link>
+          </Link> */}
+          <div style={{ width: "200px", height: "60px", borderRadius: "1rem", overflow: "hidden" }}>
+            <img src={FlixorLogo} style={{ width: "100%", height: "100%" }} />
+          </div>
 
           <nav className="hidden md:flex items-center gap-1">
             {navLinks.map(({ to, label }) => (

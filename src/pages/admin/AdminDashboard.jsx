@@ -5,12 +5,12 @@ import VerificationBanner from '../../components/common/VerificationBanner';
 import { ROUTES } from '../../utils/constants';
 
 /**
- * Static stats; backend will provide real counts (events, users, bookings).
+ * Static stats; backend will provide real counts (flights, users, bookings).
  */
 const STATS = [
-  { label: 'Total events', value: '12', sub: '4 upcoming', icon: '📅' },
-  { label: 'Total users', value: '248', sub: 'Students & admins', icon: '👥' },
-  { label: 'Bookings this month', value: '89', sub: 'Across all events', icon: '🎫' },
+  { label: 'Active routes', value: '32', sub: 'Major international & domestic', icon: '🗺️' },
+  { label: 'Total users', value: '248', sub: 'Travellers & admins', icon: '👥' },
+  { label: 'Bookings this month', value: '89', sub: 'Confirmed flight tickets', icon: '🎫' },
 ];
 
 export default function AdminDashboard() {
@@ -19,8 +19,10 @@ export default function AdminDashboard() {
   return (
     <div className="container-app py-10">
       {user && !user.isVerified && <VerificationBanner />}
-      <h1 className="page-heading text-slate-900 mb-2">Admin panel</h1>
-      <p className="text-slate-600 mb-10">Overview and quick actions</p>
+      <h1 className="page-heading text-slate-900 mb-2">Admin console</h1>
+      <p className="text-slate-600 mb-10">
+        Overview of routes, bookings, and users for your flight booking system.
+      </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         {STATS.map((stat) => (
@@ -36,15 +38,28 @@ export default function AdminDashboard() {
       </div>
 
       <h2 className="text-lg font-bold text-slate-900 mb-4">Quick actions</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Link to={ROUTES.ADMIN_EVENTS}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Link to="/admin/flights">
           <Card hover className="h-full shadow-soft hover:shadow-soft-lg">
             <div className="flex items-start gap-4">
-              <span className="text-3xl">📋</span>
+              <span className="text-3xl">✈️</span>
               <div>
-                <h3 className="font-bold text-slate-900">Manage events</h3>
+                <h3 className="font-bold text-slate-900">Manage Flights</h3>
                 <p className="text-sm text-slate-600 mt-1">
-                  Create, edit, and publish events (Event model: title, category, organizer, location, startDate, endDate, totalSeats, price, status).
+                  Configure schedules, routes, and pricing.
+                </p>
+              </div>
+            </div>
+          </Card>
+        </Link>
+        <Link to="/admin/bookings">
+          <Card hover className="h-full shadow-soft hover:shadow-soft-lg">
+            <div className="flex items-start gap-4">
+              <span className="text-3xl">🎫</span>
+              <div>
+                <h3 className="font-bold text-slate-900">Manage Bookings</h3>
+                <p className="text-sm text-slate-600 mt-1">
+                  View and manage all passenger reservations.
                 </p>
               </div>
             </div>
@@ -55,9 +70,9 @@ export default function AdminDashboard() {
             <div className="flex items-start gap-4">
               <span className="text-3xl">👥</span>
               <div>
-                <h3 className="font-bold text-slate-900">Manage users</h3>
+                <h3 className="font-bold text-slate-900">Manage Users</h3>
                 <p className="text-sm text-slate-600 mt-1">
-                  View and manage users (User model: name, email, role, isVerified).
+                  Manage travellers and administrators.
                 </p>
               </div>
             </div>
@@ -67,7 +82,8 @@ export default function AdminDashboard() {
 
       <Card className="mt-10 p-6 bg-slate-50/50 border-slate-100 shadow-soft">
         <p className="text-sm text-slate-500 italic">
-          Stats above are static. Real data will load when the backend APIs are connected.
+          Stats above are static placeholders. Real-time flight and booking data will appear
+          here once the flight management APIs are connected.
         </p>
       </Card>
     </div>
