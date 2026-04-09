@@ -1,18 +1,20 @@
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Card from '../../components/common/Card';
 import VerificationBanner from '../../components/common/VerificationBanner';
 import { ROUTES } from '../../utils/constants';
+import { bookingsApi } from '../../api/endpoints';
 
 const QUICK_LINKS = [
   {
-    to: ROUTES.EVENTS,
+    to: ROUTES.FLIGHTS,
     title: 'Search flights',
     description: 'Find one-way, round-trip, and multi-city routes',
     icon: '✈️',
   },
   {
-    to: ROUTES.STUDENT_MY_BOOKINGS,
+    to: ROUTES.MY_BOOKINGS,
     title: 'My trips',
     description: 'View your upcoming and past flight bookings',
     icon: '🎫',
@@ -27,6 +29,22 @@ const QUICK_LINKS = [
 
 export default function StudentDashboard() {
   const { user, isAdmin } = useAuth();
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const response = await bookingsApi.getMyBookings();
+        setBookings(response.data.slice(0, 3)); // Show top 3 recent bookings
+      } catch (err) {
+        console.error('Failed to load bookings:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBookings();
+  }, []);
 
   return (
     <div className="container-app py-10">
@@ -70,45 +88,55 @@ export default function StudentDashboard() {
       </div>
 
       <section>
-        <h2 className="text-lg font-bold text-slate-900 mb-4">Upcoming trips (static preview)</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold text-slate-900">Upcoming trips</h2>
+          <Link to={ROUTES.MY_BOOKINGS} className="text-sm font-bold text-primary-600 hover:text-primary-700">
+            View all
+          </Link>
+        </div>
+        
         <Card className="shadow-soft">
-          <div className="space-y-4">
-            <div className="flex items-center gap-4 p-4 rounded-xl bg-primary-50/50 border border-primary-100">
-              <div className="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center text-primary-600 font-bold text-xs text-center leading-tight">
-                KTM
-                <br />
-                ✈
-                <br />
-                DXB
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-slate-900">Kathmandu → Dubai</p>
-                <p className="text-sm text-slate-500">Mar 10, 2025 · Flight FX 208</p>
-              </div>
-              <span className="text-xs font-medium text-primary-600 bg-primary-100 px-2 py-1 rounded-lg">
-                Confirmed
-              </span>
+          {loading ? (
+            <div className="p-10 text-center text-slate-400 font-medium">Loading trips...</div>
+          ) : bookings.length > 0 ? (
+            <div className="space-y-4">
+              {bookings.map((booking) => (
+                <div key={booking._id} className="flex items-center gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-primary-200 transition-colors">
+                  <div className="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-[10px] text-center leading-tight italic">
+                    {booking.flight.origin.airportCode}
+                    <br />
+                    ✈
+                    <br />
+                    {booking.flight.destination.airportCode}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-slate-900">{booking.flight.origin.cityName} → {booking.flight.destination.cityName}</p>
+                    <p className="text-sm text-slate-500">
+                      {new Date(booking.flight.origin.dateTime).toLocaleDateString([], { day: '2-digit', month: 'short', year: 'numeric' })} · Flight {booking.flight.flightNumber}
+                    </p>
+                  </div>
+                  <span className={`text-xs font-medium px-2 py-1 rounded-lg ${
+                    booking.status === 'CONFIRMED' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
+                  }`}>
+                    {booking.status}
+                  </span>
+                </div>
+              ))}
             </div>
-            <div className="flex items-center gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100">
-              <div className="w-12 h-12 rounded-xl bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs text-center leading-tight">
-                KTM
-                <br />
-                ✈
-                <br />
-                DEL
+          ) : (
+            <div className="text-center py-10">
+              <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-slate-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-slate-900">Kathmandu → Delhi</p>
-                <p className="text-sm text-slate-500">Apr 02, 2025 · Flight FX 112</p>
-              </div>
-              <span className="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-1 rounded-lg">
-                On hold
-              </span>
+              <h3 className="text-lg font-bold text-slate-900">No trips booked yet</h3>
+              <p className="text-sm text-slate-500 mt-1">Your upcoming flights will appear here.</p>
+              <Link to={ROUTES.FLIGHTS} className="inline-block mt-4 text-primary-600 font-bold hover:underline">
+                Find a flight
+              </Link>
             </div>
-          </div>
-          <p className="mt-4 text-sm text-slate-500 italic">
-            This section will show your real upcoming flights once the booking APIs are connected.
-          </p>
+          )}
         </Card>
       </section>
     </div>

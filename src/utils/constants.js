@@ -23,6 +23,8 @@ export const ROUTES = {
   ADMIN_DASHBOARD: '/admin/dashboard',
   ADMIN_EVENTS: '/admin/events',
   ADMIN_USERS: '/admin/users',
+  ADMIN_BOOKINGS: '/admin/bookings',
+  ADMIN_FLIGHTS: '/admin/flights',
   // Aliases for menu/redirects
   ADMIN: '/admin/dashboard',
 };

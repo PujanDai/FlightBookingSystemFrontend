@@ -18,6 +18,18 @@ const Booking = () => {
         { name: user?.name || '', age: '', gender: 'MALE', passportNumber: '' }
     ]);
 
+    const handleNumPassengersChange = (num) => {
+        const currentCount = passengers.length;
+        if (num > currentCount) {
+            const extra = Array(num - currentCount).fill(0).map(() => ({
+                name: '', age: '', gender: 'MALE', passportNumber: ''
+            }));
+            setPassengers([...passengers, ...extra]);
+        } else if (num < currentCount) {
+            setPassengers(passengers.slice(0, num));
+        }
+    };
+
     useEffect(() => {
         const fetchFlight = async () => {
             try {
@@ -64,7 +76,7 @@ const Booking = () => {
                 passengers
             });
             // Redirect to success or my bookings
-            navigate(ROUTES.STUDENT_DASHBOARD);
+            navigate(ROUTES.MY_BOOKINGS);
             // In a real app, maybe a /booking-success/:id page
         } catch (err) {
             setError(err.response?.data?.message || 'Booking failed. Please try again.');
@@ -96,7 +108,29 @@ const Booking = () => {
                     <div className="flex-1 space-y-6">
                         <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
                             <h2 className="text-2xl font-black text-slate-900 mb-2">Passenger Details</h2>
-                            <p className="text-slate-500 text-sm mb-8 font-medium">Please enter the details exactly as they appear on identification.</p>
+                            <p className="text-slate-500 text-sm mb-6 font-medium">Please enter the details exactly as they appear on identification.</p>
+
+                            <div className="mb-8 p-6 bg-primary-50/30 rounded-2xl border border-primary-100 flex items-center justify-between">
+                                <div>
+                                    <h4 className="font-bold text-slate-900">How many passengers?</h4>
+                                    <p className="text-xs text-slate-500 font-medium">Book up to 5 passengers at once</p>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    {[1, 2, 3, 4, 5].map(n => (
+                                        <button
+                                            key={n}
+                                            type="button"
+                                            onClick={() => handleNumPassengersChange(n)}
+                                            className={`w-10 h-10 rounded-xl font-bold transition-all ${passengers.length === n
+                                                    ? 'bg-slate-900 text-white shadow-lg'
+                                                    : 'bg-white text-slate-400 hover:text-primary-600 border border-slate-100'
+                                                }`}
+                                        >
+                                            {n}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
 
                             <form onSubmit={handleSubmit} className="space-y-8">
                                 {passengers.map((p, index) => (

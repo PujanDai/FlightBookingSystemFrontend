@@ -7,6 +7,7 @@ import Home from '../pages/Home';
 import Flights from '../pages/Flights';
 import Booking from '../pages/Booking';
 import MyBookings from '../pages/MyBookings';
+import BookingDetail from '../pages/BookingDetail';
 import NotFound from '../pages/NotFound';
 
 import Login from '../pages/auth/Login';
@@ -57,7 +58,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'student/my-bookings',
+        path: 'my-bookings',
         element: (
           <ProtectedRoute>
             <MyBookings />
@@ -65,10 +66,10 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'my-bookings',
+        path: 'my-bookings/:id',
         element: (
           <ProtectedRoute>
-            <MyBookings />
+            <BookingDetail />
           </ProtectedRoute>
         ),
       },

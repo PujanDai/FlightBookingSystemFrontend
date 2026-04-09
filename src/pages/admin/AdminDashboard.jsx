@@ -39,7 +39,7 @@ export default function AdminDashboard() {
 
       <h2 className="text-lg font-bold text-slate-900 mb-4">Quick actions</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Link to="/admin/flights">
+        <Link to={ROUTES.ADMIN_FLIGHTS}>
           <Card hover className="h-full shadow-soft hover:shadow-soft-lg">
             <div className="flex items-start gap-4">
               <span className="text-3xl">✈️</span>
@@ -52,7 +52,7 @@ export default function AdminDashboard() {
             </div>
           </Card>
         </Link>
-        <Link to="/admin/bookings">
+        <Link to={ROUTES.ADMIN_BOOKINGS}>
           <Card hover className="h-full shadow-soft hover:shadow-soft-lg">
             <div className="flex items-start gap-4">
               <span className="text-3xl">🎫</span>

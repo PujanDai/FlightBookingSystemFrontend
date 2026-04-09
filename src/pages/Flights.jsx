@@ -12,6 +12,8 @@ const Flights = () => {
 
     const [flights, setFlights] = useState([]);
     const [filteredFlights, setFilteredFlights] = useState([]);
+
+    console.log(filteredFlights);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 

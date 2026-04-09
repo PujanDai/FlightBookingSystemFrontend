@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Button from '../common/Button';
 import { ROUTES } from '../../utils/constants';
 import { airportsData } from '../../assets/airports';
+import Select from "react-select";
 
 export default function FlightSearchHero({ showAuthCtas = true }) {
   const navigate = useNavigate();
@@ -39,6 +40,12 @@ export default function FlightSearchHero({ showAuthCtas = true }) {
       },
     });
   };
+
+
+  const airportOptions = airportsData?.map((airport) => ({
+    value: airport.code,
+    label: `${airport.airport} (${airport.code})`,
+  }));
 
   return (
     <section className="relative overflow-hidden bg-gradient-hero text-white py-12 sm:py-16 px-4">
@@ -127,20 +134,13 @@ export default function FlightSearchHero({ showAuthCtas = true }) {
                 <label className="text-[11px] font-semibold text-slate-500 tracking-wide">
                   FROM
                 </label>
-                <select
-                  required
-                  value={form.from}
-                  onChange={(e) => handleChange("from", e.target.value)}
+                <Select
+                  options={airportOptions}
+                  placeholder="City or airport"
+                  value={airportOptions.find((opt) => opt.value === form.from)}
+                  onChange={(selected) => handleChange("from", selected.value)}
                   className="mt-1 w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-900 shadow-xs focus:border-primary-400 focus:ring-2 focus:ring-primary-100 outline-none"
-                >
-                  <option value="">City or airport</option>
-
-                  {airportsData.map((airport) => (
-                    <option key={airport.code} value={airport.code}>
-                      {airport.airport} ({airport.code})
-                    </option>
-                  ))}
-                </select>
+                />
               </div>
               <div>
                 <label className="text-[11px] font-semibold text-slate-500 tracking-wide">
@@ -154,20 +154,13 @@ export default function FlightSearchHero({ showAuthCtas = true }) {
                   onChange={(e) => handleChange('to', e.target.value)}
                   className="mt-1 w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-900 shadow-xs focus:border-primary-400 focus:ring-2 focus:ring-primary-100 outline-none"
                 /> */}
-                <select
-                  required
-                  value={form.to}
-                  onChange={(e) => handleChange("to", e.target.value)}
+                <Select
+                  options={airportOptions}
+                  placeholder="City or airport"
+                  value={airportOptions.find((opt) => opt.value === form.to)}
+                  onChange={(selected) => handleChange("to", selected.value)}
                   className="mt-1 w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-900 shadow-xs focus:border-primary-400 focus:ring-2 focus:ring-primary-100 outline-none"
-                >
-                  <option value="">City or airport</option>
-
-                  {airportsData.map((airport) => (
-                    <option key={airport.code} value={airport.code}>
-                      {airport.airport} ({airport.code})
-                    </option>
-                  ))}
-                </select>
+                />
               </div>
             </div>
 

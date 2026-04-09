@@ -21,6 +21,17 @@ const AdminBookings = () => {
         fetchBookings();
     }, []);
 
+    const handleConfirm = async (id) => {
+        if (window.confirm('Are you sure you want to confirm this booking and mark as PAID?')) {
+            try {
+                await bookingsApi.updateStatus(id, { status: 'CONFIRMED', paymentStatus: 'PAID' });
+                setBookings(bookings.map(b => b._id === id ? { ...b, status: 'CONFIRMED', paymentStatus: 'PAID' } : b));
+            } catch (err) {
+                alert('Failed to confirm booking');
+            }
+        }
+    };
+
     if (loading) return <div className="p-10 text-center">Loading all bookings...</div>;
 
     return (
@@ -42,6 +53,7 @@ const AdminBookings = () => {
                             <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Passengers</th>
                             <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Total</th>
                             <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Status</th>
+                            <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">Action</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
@@ -77,10 +89,29 @@ const AdminBookings = () => {
                                     NPR {booking.totalPrice.toLocaleString()}
                                 </td>
                                 <td className="px-6 py-4">
-                                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase ${booking.status === 'CONFIRMED' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
+                                    <div className="flex flex-col gap-1">
+                                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase ${
+                                            booking.status === 'CONFIRMED' ? 'bg-emerald-50 text-emerald-600' : 
+                                            booking.status === 'CANCELLED' ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-600'
                                         }`}>
-                                        {booking.status}
-                                    </span>
+                                            {booking.status}
+                                        </span>
+                                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase ${
+                                            booking.paymentStatus === 'PAID' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400'
+                                        }`}>
+                                            {booking.paymentStatus}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td className="px-6 py-4 text-right">
+                                    {booking.status === 'PENDING' && (
+                                        <button 
+                                            onClick={() => handleConfirm(booking._id)}
+                                            className="px-4 py-2 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-emerald-600 transition-colors shadow-lg shadow-slate-200"
+                                        >
+                                            Confirm
+                                        </button>
+                                    )}
                                 </td>
                             </tr>
                         ))}
