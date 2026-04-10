@@ -7,4 +7,5 @@ export const bookingsApi = {
     getById: (id) => apiClient.get(`/bookings/${id}`),
     updateStatus: (id, data) => apiClient.put(`/bookings/${id}/status`, data),
     downloadTicket: (id) => apiClient.get(`/bookings/${id}/ticket`, { responseType: 'blob' }),
+    updatePrice: (id, data) => apiClient.patch(`/admin/bookings/${id}/price`, data),
 };

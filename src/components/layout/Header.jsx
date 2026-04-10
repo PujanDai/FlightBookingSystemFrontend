@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { APP_NAME, ROUTES } from '../../utils/constants';
 import Button from '../common/Button';
 import UserMenu from './UserMenu';
+import NotificationBell from './NotificationBell';
 import FlixorLogo from "../../assets/FlixorLogo.png"
 
 export default function Header() {
@@ -56,7 +57,10 @@ export default function Header() {
 
           <div className="flex items-center gap-3">
             {isAuthenticated ? (
-              <UserMenu />
+              <>
+                <NotificationBell />
+                <UserMenu />
+              </>
             ) : (
               <>
                 <Link to={ROUTES.LOGIN} className="hidden sm:block">

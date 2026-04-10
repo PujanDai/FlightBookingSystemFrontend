@@ -3,10 +3,27 @@ import { Link } from 'react-router-dom';
 import { bookingsApi } from '../api/endpoints';
 import { ROUTES } from '../utils/constants';
 
+const formatRemainingTime = (seconds) => {
+    const safeSeconds = Math.max(0, Number(seconds) || 0);
+    const hrs = Math.floor(safeSeconds / 3600);
+    const mins = Math.floor((safeSeconds % 3600) / 60);
+    const secs = safeSeconds % 60;
+    return [hrs, mins, secs].map((unit) => String(unit).padStart(2, '0')).join(':');
+};
+
+const getLiveRemainingSeconds = (booking, nowMs) => {
+    if (booking.paymentStatus === 'PAID') return null;
+    if (booking.isExpired) return 0;
+    const expiresAtMs = booking.expiresAt ? new Date(booking.expiresAt).getTime() : null;
+    if (!expiresAtMs || Number.isNaN(expiresAtMs)) return Math.max(0, Number(booking.remainingTime) || 0);
+    return Math.max(0, Math.floor((expiresAtMs - nowMs) / 1000));
+};
+
 const MyBookings = () => {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [nowMs, setNowMs] = useState(Date.now());
 
     useEffect(() => {
         const fetchBookings = async () => {
@@ -20,6 +37,11 @@ const MyBookings = () => {
             }
         };
         fetchBookings();
+    }, []);
+
+    useEffect(() => {
+        const timer = setInterval(() => setNowMs(Date.now()), 1000);
+        return () => clearInterval(timer);
     }, []);
 
     const handleDownloadTicket = async (e, bookingId, bookingReference) => {
@@ -80,6 +102,10 @@ const MyBookings = () => {
                 ) : (
                     <div className="grid gap-6">
                         {bookings.map((booking) => (
+                            (() => {
+                                const remainingSeconds = getLiveRemainingSeconds(booking, nowMs);
+                                const isUnpaidExpired = booking.paymentStatus !== 'PAID' && (booking.isExpired || remainingSeconds === 0);
+                                return (
                             <Link 
                                 key={booking._id} 
                                 to={`${ROUTES.MY_BOOKINGS}/${booking._id}`}
@@ -94,6 +120,13 @@ const MyBookings = () => {
                                         <div>
                                             <div className="flex items-center gap-2">
                                                 <h4 className="font-bold text-slate-900 group-hover:text-primary-600 transition-colors">{booking.flight.origin.cityName} to {booking.flight.destination.cityName}</h4>
+                                                <span className={`text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest ${
+                                                    booking.paymentStatus !== 'PAID' && (booking.isExpired || remainingSeconds === 0)
+                                                        ? 'bg-red-50 text-red-600'
+                                                        : 'bg-slate-50 text-slate-500'
+                                                }`}>
+                                                    {isUnpaidExpired ? 'Expired' : booking.paymentStatus === 'PAID' ? 'Paid' : `Time left ${formatRemainingTime(remainingSeconds)}`}
+                                                </span>
                                                 <span className={`text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest ${
                                                     booking.status === 'CONFIRMED' ? 'bg-emerald-50 text-emerald-600' : 
                                                     booking.status === 'CANCELLED' ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-600'
@@ -134,6 +167,8 @@ const MyBookings = () => {
                                     </div>
                                 </div>
                             </Link>
+                                );
+                            })()
                         ))}
                     </div>
                 )}
